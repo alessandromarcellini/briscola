@@ -42,9 +42,9 @@ class Deck:
         return self.cards.pop()
 
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, points=0):
         self.name = name #giocatore o cpu
-        #self.points = points   in caso servisse un conteggio punti, partite vinte, alla meglio dei 3
+        self.points = points
 
         self.hand = [] #da massimo 3 carte
 
@@ -59,6 +59,10 @@ class Player:
         else:
             raise ValueError('Il numero della carta da giocare deve essere compreso tra 1 e 3!')
 
+    def bot_play(self):
+        randint = random.randint(0, 2)
+        return self.hand.pop(randint)
+
     def draw(self, deck):
         self.hand.append(deck.pop())
 
@@ -68,33 +72,60 @@ class Player:
         for i in range(len(self.hand)):
             print(self.hand[i])
 
+class Table:
+    def __init__(self):
+        semi = ["denari", "spade", "coppe", "bastoni"]
 
+        self.cards = []
+        self.briscola = semi[random.randint(0, 3)]
+
+
+
+#creazione giocatori
+name = input("Inserisci il tuo NickName: ")
+player = Player(name)
+cpu = Player("Cpu")
 
 #creazione tavolo
-table = []
+table = Table()
+print("Buona fortuna!")
+print(f"La briscola è: {table.briscola}\n")
+
 
 #creazione mazzo
 deck = Deck()
 deck.create()
-#mischiare mazzo
 deck.shuffle()
 
 #creazione mazzo di riferimento, ogni volta che esce una carta la leviamo, teniamo traccia delle carte uscite
 reference_deck = Deck()
 reference_deck.create()
 
-#creazione giocatori
-player = Player("Parcel")
-cpu = Player("Cpu")
+#CLS, lascia solo la briscola
+
 #iniziare partita, creazione mano giocatori
 player.buildHand(deck)
 cpu.buildHand(deck)
 
-#mostra mano
-player.showHand()
-print("")
-cpu.showHand()
+while len(deck.cards) != 0:
+    # mostra mano
+    player.showHand()
+    print("\n-----------\n")
+    cpu.showHand()
 
-#scegli una carta e mettila sul tavolo
-table.append(player.play())
+
+    #scegli una carta e mettila sul tavolo
+    table.cards.append(player.play())
+
+    #logica bot...
+    table.cards.append(cpu.bot_play())
+
+    #scegli vincitore
+
+
+    #assegna punti al vincitore
+
+    #pescare carta
+
+    #riniziare
 
